@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="###引言 在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notif">
+<meta name="description" content="引言在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notificat">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ceilometer对notifications的处理">
 <meta property="og:url" content="http://yoursite.com/2014/07/20/2014-7-20-the-process-of-notification-in-ceilometer/index.html">
 <meta property="og:site_name" content="Liu sheng">
-<meta property="og:description" content="###引言 在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notif">
+<meta property="og:description" content="引言在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notificat">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/images/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
-<meta property="og:updated_time" content="2019-07-04T12:24:52.514Z">
+<meta property="og:updated_time" content="2019-07-04T12:27:19.408Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceilometer对notifications的处理">
-<meta name="twitter:description" content="###引言 在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notif">
+<meta name="twitter:description" content="引言在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notificat">
 <meta name="twitter:image" content="http://yoursite.com/images/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
 
 
@@ -301,12 +301,9 @@
       
 
       
-        <p>###引言</p>
-<p>在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notification代理和ceilometer-collector来完成的。collector会监听消息总线获取openstack其他组件发出的notification消息，（同时也监听ceilometer的pollster发出的消息）</p>
-<p>###服务</p>
-<p>类似于上一篇文章，</p>
-<p>###plugin</p>
-<p>在次之前，简单说一下ceilometer中的Plugin</p>
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notification代理和ceilometer-collector来完成的。collector会监听消息总线获取openstack其他组件发出的notification消息，（同时也监听ceilometer的pollster发出的消息）</p>
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>类似于上一篇文章，</p>
+<h3 id="plugin"><a href="#plugin" class="headerlink" title="plugin"></a>plugin</h3><p>在次之前，简单说一下ceilometer中的Plugin</p>
 <p>Ceilometer实现的Plugin框架依赖setuptools的Dynamic Discovery of Services and Plugins实现。这是Ceilometer能进行扩展的基础。Ceilometer中有四种类型的Plugin：Poller，Publisher，Notification和Transformer。</p>
 <ul>
 <li>Poller主要负责被Agent调用去查询数据，返回Counter类型的结果给Agent框架；</li>
@@ -314,12 +311,10 @@
 <li>Transformer负责转换Counter</li>
 <li>Publisher负责将Agent框架中Counter类型的结果转换成消息（包括签名），并将消息发送到MQ；</li>
 </ul>
-<p>###架构</p>
-<p>下面引用一下ceilometer官方开发者文档中的数据采集流程图：</p>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>下面引用一下ceilometer官方开发者文档中的数据采集流程图：</p>
 <p><img src="/images/2014-7-20-the-process-of-notification-in-ceilometer/1.png" alt>  </p>
 <p>图中绿色的箭头所指向的即为openstack中notifications的消息走向。</p>
-<p>###代码走读</p>
-<p>1.入口</p>
+<h3 id="代码走读"><a href="#代码走读" class="headerlink" title="代码走读"></a>代码走读</h3><p>1.入口</p>
 <pre><code>console_scripts =
     ……
     ceilometer-agent-notification = ceilometer.notification:agent
@@ -431,8 +426,17 @@ http.response = ceilometer.middleware:HTTPResponse
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -484,6 +488,22 @@ http.response = ceilometer.middleware:HTTPResponse
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务"><span class="nav-number">2.</span> <span class="nav-text">服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plugin"><span class="nav-number">3.</span> <span class="nav-text">plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#架构"><span class="nav-number">4.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码走读"><span class="nav-number">5.</span> <span class="nav-text">代码走读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
