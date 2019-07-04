@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="声明：本博客欢迎转发，但请保留原作者信息!    1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstac">
+<meta name="description" content="1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstack的组件）的计量信息采集。ceilometer可以">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅析ceilometer中agent">
 <meta property="og:url" content="http://yoursite.com/2014/05/20/2014-5-20-the-agents-of-ceilometer/index.html">
 <meta property="og:site_name" content="Liu sheng">
-<meta property="og:description" content="声明：本博客欢迎转发，但请保留原作者信息!    1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstac">
+<meta property="og:description" content="1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstack的组件）的计量信息采集。ceilometer可以">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/images/2014-5-20-the-agents-of-ceilometer/1.png">
 <meta property="og:image" content="http://yoursite.com/images/2014-5-20-the-agents-of-ceilometer/2.jpg">
-<meta property="og:updated_time" content="2019-07-04T12:21:01.966Z">
+<meta property="og:updated_time" content="2019-07-04T12:24:32.602Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅析ceilometer中agent">
-<meta name="twitter:description" content="声明：本博客欢迎转发，但请保留原作者信息!    1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstac">
+<meta name="twitter:description" content="1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstack的组件）的计量信息采集。ceilometer可以">
 <meta name="twitter:image" content="http://yoursite.com/images/2014-5-20-the-agents-of-ceilometer/1.png">
 
 
@@ -302,9 +302,7 @@
       
 
       
-        <p>声明：<br>本博客欢迎转发，但请保留原作者信息!  </p>
-<hr>
-<h3 id="1-引言："><a href="#1-引言：" class="headerlink" title="1.引言："></a>1.引言：</h3><p>Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。</p>
+        <h3 id="1-引言："><a href="#1-引言：" class="headerlink" title="1.引言："></a>1.引言：</h3><p>Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。</p>
 <p>这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstack的组件）的计量信息采集。<br>ceilometer可以为监控、调试、以及图形化工具推送收集到的信息，与此同时也将信息存入ceilometer的存储后端，这种消息推送机制定义为“multi-publisher”。</p>
 <p>最近，heat的诞生，更加明确了OpenStack需要有一个工具来监控多样的数据从而触发不同的操作。由于ceilometer已经可以用于收集浩如烟海的数据，顺利成章地扩展出一个新的功能“alarming”。</p>
 <h3 id="2-ceilometer中的服务："><a href="#2-ceilometer中的服务：" class="headerlink" title="2.ceilometer中的服务："></a>2.ceilometer中的服务：</h3><p>ceilometer主要由四个服务组成：</p>
@@ -511,15 +509,6 @@ disk：stats（read字节数和write字节数b）
               </div>
             
 
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                
-                  <span class="site-state-item-count">1</span>
-                  <span class="site-state-item-name">categories</span>
-                
-              </div>
             
 
             

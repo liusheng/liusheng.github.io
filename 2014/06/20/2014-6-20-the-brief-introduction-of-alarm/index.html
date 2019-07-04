@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="声明：本博客欢迎转发，但请保留原作者信息!    1 对象模型一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。 alarm的对象模型如下：  alarm_id：alarm的id（uuid） type：告警类型，分为threshold类型和combination类型，分别对应于基于门槛的告警和已有告警逻辑组合成的新告警 name：">
+<meta name="description" content="1 对象模型一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。 alarm的对象模型如下：  alarm_id：alarm的id（uuid） type：告警类型，分为threshold类型和combination类型，分别对应于基于门槛的告警和已有告警逻辑组合成的新告警 name：告警名称。 description：告警描述，若创">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ceilometer中alarm浅析">
 <meta property="og:url" content="http://yoursite.com/2014/06/20/2014-6-20-the-brief-introduction-of-alarm/index.html">
 <meta property="og:site_name" content="Liu sheng">
-<meta property="og:description" content="声明：本博客欢迎转发，但请保留原作者信息!    1 对象模型一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。 alarm的对象模型如下：  alarm_id：alarm的id（uuid） type：告警类型，分为threshold类型和combination类型，分别对应于基于门槛的告警和已有告警逻辑组合成的新告警 name：">
+<meta property="og:description" content="1 对象模型一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。 alarm的对象模型如下：  alarm_id：alarm的id（uuid） type：告警类型，分为threshold类型和combination类型，分别对应于基于门槛的告警和已有告警逻辑组合成的新告警 name：告警名称。 description：告警描述，若创">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-04T12:21:00.856Z">
+<meta property="og:updated_time" content="2019-07-04T12:24:19.531Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceilometer中alarm浅析">
-<meta name="twitter:description" content="声明：本博客欢迎转发，但请保留原作者信息!    1 对象模型一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。 alarm的对象模型如下：  alarm_id：alarm的id（uuid） type：告警类型，分为threshold类型和combination类型，分别对应于基于门槛的告警和已有告警逻辑组合成的新告警 name：">
+<meta name="twitter:description" content="1 对象模型一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。 alarm的对象模型如下：  alarm_id：alarm的id（uuid） type：告警类型，分为threshold类型和combination类型，分别对应于基于门槛的告警和已有告警逻辑组合成的新告警 name：告警名称。 description：告警描述，若创">
 
 
 
@@ -299,9 +299,7 @@
       
 
       
-        <p>声明：<br>本博客欢迎转发，但请保留原作者信息!  </p>
-<hr>
-<h2 id="1-对象模型"><a href="#1-对象模型" class="headerlink" title="1 对象模型"></a>1 对象模型</h2><p>一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。</p>
+        <h2 id="1-对象模型"><a href="#1-对象模型" class="headerlink" title="1 对象模型"></a>1 对象模型</h2><p>一个alarm在ceilometer中定义为对一种计量统计值的超过一定条件的告警，或者若干个告警的逻辑（与、或）组合。</p>
 <p>alarm的对象模型如下：</p>
 <ul>
 <li>alarm_id：alarm的id（uuid）</li>
@@ -435,8 +433,8 @@ combination = ceilometer.alarm.evaluator.combination:CombinationEvaluator
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/14/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
+              <a href="/2014/07/20/2014-7-20-the-process-of-notification-in-ceilometer/" rel="prev" title="ceilometer对notifications的处理">
+                ceilometer对notifications的处理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -520,15 +518,6 @@ combination = ceilometer.alarm.evaluator.combination:CombinationEvaluator
               </div>
             
 
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                
-                  <span class="site-state-item-count">1</span>
-                  <span class="site-state-item-name">categories</span>
-                
-              </div>
             
 
             
