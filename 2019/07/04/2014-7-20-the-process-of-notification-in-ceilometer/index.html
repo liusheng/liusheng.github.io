@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="ceilometer对notifications的处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceilometer对notifications的处理">
+<meta property="og:url" content="http://yoursite.com/2019/07/04/2014-7-20-the-process-of-notification-in-ceilometer/index.html">
+<meta property="og:site_name" content="Liu sheng">
+<meta property="og:description" content="ceilometer对notifications的处理">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
+<meta property="og:updated_time" content="2019-05-14T11:30:13.725Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceilometer对notifications的处理">
+<meta name="twitter:description" content="ceilometer对notifications的处理">
+<meta name="twitter:image" content="http://yoursite.com/images/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/04/2014-7-20-the-process-of-notification-in-ceilometer/">
+
+
+
+
+
+  <title>ceilometer对notifications的处理 | Liu sheng</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Liu sheng</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/04/2014-7-20-the-process-of-notification-in-ceilometer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liu sheng">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liu sheng">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ceilometer对notifications的处理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-04T20:19:24+08:00">
+                2019-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  ceilometer对notifications的处理
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>声明：<br>本博客欢迎转发，但请保留原作者信息!  </p>
+<hr>
+<p>###引言</p>
+<p>在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notification代理和ceilometer-collector来完成的。collector会监听消息总线获取openstack其他组件发出的notification消息，（同时也监听ceilometer的pollster发出的消息）</p>
+<p>###服务</p>
+<p>类似于上一篇文章，</p>
+<p>###plugin</p>
+<p>在次之前，简单说一下ceilometer中的Plugin</p>
+<p>Ceilometer实现的Plugin框架依赖setuptools的Dynamic Discovery of Services and Plugins实现。这是Ceilometer能进行扩展的基础。Ceilometer中有四种类型的Plugin：Poller，Publisher，Notification和Transformer。</p>
+<ul>
+<li>Poller主要负责被Agent调用去查询数据，返回Counter类型的结果给Agent框架；</li>
+<li>Notification负责在MQ中监听相关topic的消息（虚拟机创建等），并把他转换成Counter类型的结果给Agent框架。</li>
+<li>Transformer负责转换Counter</li>
+<li>Publisher负责将Agent框架中Counter类型的结果转换成消息（包括签名），并将消息发送到MQ；</li>
+</ul>
+<p>###架构</p>
+<p>下面引用一下ceilometer官方开发者文档中的数据采集流程图：</p>
+<p><img src="/images/2014-7-20-the-process-of-notification-in-ceilometer/1.png" alt>  </p>
+<p>图中绿色的箭头所指向的即为openstack中notifications的消息走向。</p>
+<p>###代码走读</p>
+<p>1.入口</p>
+<pre><code>console_scripts =
+    ……
+    ceilometer-agent-notification = ceilometer.notification:agent
+</code></pre><p>2.服务启动<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">collector</span><span class="params">()</span>:</span></span><br><span class="line">service.prepare_service()<span class="comment">#主要做一些默认配置，配置日志级别等</span></span><br><span class="line">os_service.launch(NotificationService(</span><br><span class="line">    cfg.CONF.host,</span><br><span class="line">    <span class="string">'ceilometer.agent.notification'</span>)).wait()</span><br><span class="line">    <span class="comment">#起一个rpc服务，用于创建消息队列的consumer</span></span><br></pre></td></tr></table></figure></p>
+<p>3.消息队列<br>服务将会创建3（三种类型：基于topic的，基于host和topic的，基于topic的广播消息）个consumer用于接收消息队列上的消息<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_service_hook</span><span class="params">(self, service)</span>:</span></span><br><span class="line">    <span class="string">'''Consumers must be declared before consume_thread start.'''</span></span><br><span class="line">    self.pipeline_manager = pipeline.setup_pipeline(</span><br><span class="line">        transformer.TransformerExtensionManager(</span><br><span class="line">            <span class="string">'ceilometer.transformer'</span>,</span><br><span class="line">        ),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    LOG.debug(_(<span class="string">'Loading event definitions'</span>))</span><br><span class="line">    self.event_converter = event_converter.setup_events(</span><br><span class="line">        extension.ExtensionManager(</span><br><span class="line">            namespace=<span class="string">'ceilometer.event.trait_plugin'</span>))</span><br><span class="line"></span><br><span class="line">    self.notification_manager = \</span><br><span class="line">        extension.ExtensionManager(</span><br><span class="line">            namespace=self.NOTIFICATION_NAMESPACE,</span><br><span class="line">            invoke_on_load=<span class="literal">True</span>,</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> list(self.notification_manager):</span><br><span class="line">        LOG.warning(_(<span class="string">'Failed to load any notification handlers for %s'</span>),</span><br><span class="line">                    self.NOTIFICATION_NAMESPACE)</span><br><span class="line">    self.notification_manager.map(self._setup_subscription)</span><br></pre></td></tr></table></figure></p>
+<p>这个关键的函数里面，分为3步：<br>第一步，用于安装pipline，也就是加载transformer，这里会加载pipline的配置文件（/etc/ceilometer/pipline.yaml）最终得到Pipline对象，Pipline对象是这个样子的：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: pipeline_name</span><br><span class="line">    <span class="string">"interval"</span>: interval_time</span><br><span class="line">    <span class="string">"meters"</span> :  [<span class="string">"meter_1"</span>, <span class="string">"meter_2"</span>],</span><br><span class="line">    <span class="attr">"resources"</span>: [<span class="string">"resource_uri1"</span>, <span class="string">"resource_uri2"</span>],</span><br><span class="line">    <span class="attr">"tranformers"</span>:[</span><br><span class="line">                      &#123;<span class="attr">"name"</span>: <span class="string">"Transformer_1"</span>,</span><br><span class="line">                       <span class="attr">"parameters"</span>: &#123;<span class="attr">"p1"</span>: <span class="string">"value"</span>&#125;&#125;,</span><br><span class="line"></span><br><span class="line">                       &#123;<span class="attr">"name"</span>: <span class="string">"Transformer_2"</span>,</span><br><span class="line">                       <span class="attr">"parameters"</span>: &#123;<span class="attr">"p1"</span>: <span class="string">"value"</span>&#125;&#125;,</span><br><span class="line">                   ]</span><br><span class="line">    <span class="string">"publishers"</span>: [<span class="string">"publisher_1"</span>, <span class="string">"publisher_2"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从这个接口里可以看出pipline中定义了周期(默认600s)，最主要的是transformer，主要完成对数据的转换，然后是pubishers列表，这里可以看出ceilometer支持多发布机制。</p>
+<p>第二步，用于加载事件转换driver，这里首先会从配置文件（event_definitions.yaml）里面来加载event的定义，若没有该配置文件则使用默配置（空列表）；其次将ExtensionManager对象中的事件定义添加到事件定义列表中，这里的ExtensionManager对象会加载setup.cfg中定义的：</p>
+<pre><code>ceilometer.event.trait_plugin =
+#用于默认一个字符串分割（默认用&quot;.&quot;）的插件
+split = ceilometer.event.trait_plugins:SplitterTraitPlugin
+#用于位字段分割的插件
+bitfield = ceilometer.event.trait_plugins:BitfieldTraitPlugin
+</code></pre><p>第三步，首先获取notification的driver列表，这里使用extension.ExtensionManager，是根据setup.cfg中定义的以该类namespace（ceilometer.notification）字段的列表，即下面这些：</p>
+<pre><code>instance = ceilometer.compute.notifications.instance:Instance
+……
+#具体不一一列出，有兴趣可以看看代码里面setup.cfg
+http.response = ceilometer.middleware:HTTPResponse
+</code></pre><p>这个列表定义了notification目前所能处理的内容，同时在extension.ExtensionManager的对象初始化参数中我们还注意到有一个invoke_on_load=True表明在加载上述列表的插件的时候会调用该插件对象。</p>
+<p>最后，还有关键的一步，notification_manager.map(self._setup_subscription)，这一步是对上面加载完成的插件列表每一个对象调用self._setup_subscription这个方法，也就是对每一个notification建立订阅关系，在_setup_subscription有以下关键的实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> exchange_topic <span class="keyword">in</span> handler.get_exchange_topics(cfg.CONF):</span><br><span class="line">    <span class="keyword">for</span> topic <span class="keyword">in</span> exchange_topic.topics:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.conn.join_consumer_pool(</span><br><span class="line">                callback=self.process_notification,</span><br><span class="line">                pool_name=topic,</span><br><span class="line">                topic=topic,</span><br><span class="line">                exchange_name=exchange_topic.exchange,</span><br><span class="line">                ack_on_error=ack_on_error)</span><br></pre></td></tr></table></figure>
+<p>在这个实现对该notification插件建立notification消息的处理，这里关键在于：<br>callback=self.process_notification<br>到这个方法会对每一个获取到的notification进行处理并将其发布出去。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/14/liu-sheng-github-io/" rel="next" title="liu-sheng.github.io">
+                <i class="fa fa-chevron-left"></i> liu-sheng.github.io
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Liu sheng</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/liusheng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liu sheng</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
