@@ -86,13 +86,13 @@
 <meta property="og:site_name" content="Liu sheng">
 <meta property="og:description" content="1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstack的组件）的计量信息采集。ceilometer可以">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/images/2014-5-20-the-agents-of-ceilometer/1.png">
-<meta property="og:image" content="http://yoursite.com/images/2014-5-20-the-agents-of-ceilometer/2.jpg">
-<meta property="og:updated_time" content="2019-07-04T12:24:32.602Z">
+<meta property="og:image" content="http://yoursite.com/2014-5-20-the-agents-of-ceilometer/1.png">
+<meta property="og:image" content="http://yoursite.com/2014-5-20-the-agents-of-ceilometer/2.jpg">
+<meta property="og:updated_time" content="2019-07-05T01:21:54.578Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅析ceilometer中agent">
 <meta name="twitter:description" content="1.引言：Ceilometer项目创建时最初的目的是实现一个能为计费系统采集数据的框架。在G版的开发中，社区已经更新了他们的目标，新目标是希望Ceilometer成为OpenStack里数据采集（监控数据、计费数据）的唯一基础设施，采集到的数据提供给监控、计费、面板等项目使用。 这个项目，从诞生之日起，就被用于越来越多其他不同项目（openstack的组件）的计量信息采集。ceilometer可以">
-<meta name="twitter:image" content="http://yoursite.com/images/2014-5-20-the-agents-of-ceilometer/1.png">
+<meta name="twitter:image" content="http://yoursite.com/2014-5-20-the-agents-of-ceilometer/1.png">
 
 
 
@@ -312,7 +312,7 @@
 <li>ceilometer-central-agent，这个组件运行在控制节点上面，负责了除Compute（nova）之外的所有信息采集，是通过周期性调用Image, Volume, Objects, Network等这些组件的REST API的方式来轮询信息的。</li>
 <li>ceilometer-compute-agent，这个组件运行在compute（nova）节点上，该组件用来收集计算节点上的信息，通过Stevedore管理了一组pollster插件， 分别用来获取虚拟机的CPU, Disk IO, Network IO, Instance这些信息，值得一提的是这些信息大部分是通过调用Hypervisor的API来获取的， 目前，Ceilometer仅提供了Libvirt的API。</li>
 </ul>
-<p>整个ceilometer的逻辑架构如下图：<br><img src="/images/2014-5-20-the-agents-of-ceilometer/1.png" alt></p>
+<p>整个ceilometer的逻辑架构如下图：<br><img src="/2014-5-20-the-agents-of-ceilometer/1.png" alt></p>
 <p>详细信息可以参考：<a href="http://docs.openstack.org/developer/ceilometer/architecture.html" target="_blank" rel="noopener">ceilometer开发者文档</a></p>
 <h3 id="3-ceilometer中数据的采集："><a href="#3-ceilometer中数据的采集：" class="headerlink" title="3.ceilometer中数据的采集："></a>3.ceilometer中数据的采集：</h3><p>ceilometer使用三种独立的方式来获取计量数据：</p>
 <ul>
@@ -383,7 +383,7 @@ storage.objects.size
 image 
 </code></pre><p>其中energy和power使用来测量能耗的，需要有kwapi的支持。这些pollster都对应于ceilometer中一个类的实现，以image为例，ceilometer会首先调用keystoneclient获取鉴权信息，在调用glance的api（image.list接口）来获取image信息，最终经过将获取到的数据经过transformer转换再调用publisher(samples)将采集到的样本信息发布（由多种发布方式，通常发布到消息队列，再由ceilometer-collector收集并存到ceilometer的存储后端（db等））。</p>
 <h3 id="6-compute-agent"><a href="#6-compute-agent" class="headerlink" title="6.compute-agent"></a>6.compute-agent</h3><p>compute-agent的接口基本上和central-agent的一致，主要获取虚拟机的相关信息，由于compute是运行在每一个compute节点上的，所以compute-agent获取的信息是以本节点上的虚拟机为主体的，即在其poll_and_publish方法中首先调用novaclient的instance_get_all_by_host接口获取到该节点上所有虚拟机列表，最终对每一个虚拟机执行pollster对象列表中的get_samples方法。（这里与前面有所不同的是多了一层循环，首先遍历instances，再遍历pollsters）</p>
-<p>compute-agent的pollster在ceilmeter代码中的结构比较清晰，如下图：<br><img src="/images/2014-5-20-the-agents-of-ceilometer/2.jpg" alt></p>
+<p>compute-agent的pollster在ceilmeter代码中的结构比较清晰，如下图：<br><img src="/2014-5-20-the-agents-of-ceilometer/2.jpg" alt></p>
 <p>这里可以看出主要获取了虚拟机的cpu、disk、net，其中instance pollster主要是虚拟机自身的信息,包括flavor信息、name、type等。</p>
 <p>这里我们需要重点关注的是获取虚拟机的cpu、disk、net信息的时候会通过ceilometer的inspector来获取虚拟机化层的该虚拟机的信息。</p>
 <p>目前，ceilometer实现了的inspector主要有hyperv的喝libvirt的。</p>
