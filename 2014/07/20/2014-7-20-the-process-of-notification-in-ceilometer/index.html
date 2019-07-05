@@ -86,12 +86,12 @@
 <meta property="og:site_name" content="Liu sheng">
 <meta property="og:description" content="引言在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notificat">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
-<meta property="og:updated_time" content="2019-07-05T01:22:10.369Z">
+<meta property="og:image" content="http://yoursite.com/2014/07/20/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
+<meta property="og:updated_time" content="2019-07-05T01:26:34.299Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceilometer对notifications的处理">
 <meta name="twitter:description" content="引言在前一篇文章有提到ceilometer对数据的采集最主要的方式是Bus listener agent，即监听消息总线上ceilometer对notification,所谓notifications，是指openstack各个组件在执行某一个操作的过程中主动发出的一些描述状态或者动作的消息（通常是发送到消息队列）。ceilometer对notifications的处理核心是通过notificat">
-<meta name="twitter:image" content="http://yoursite.com/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
+<meta name="twitter:image" content="http://yoursite.com/2014/07/20/2014-7-20-the-process-of-notification-in-ceilometer/1.png">
 
 
 
@@ -312,7 +312,7 @@
 <li>Publisher负责将Agent框架中Counter类型的结果转换成消息（包括签名），并将消息发送到MQ；</li>
 </ul>
 <h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>下面引用一下ceilometer官方开发者文档中的数据采集流程图：</p>
-<p><img src="/2014-7-20-the-process-of-notification-in-ceilometer/1.png" alt>  </p>
+<p><img src="1.png" alt>  </p>
 <p>图中绿色的箭头所指向的即为openstack中notifications的消息走向。</p>
 <h3 id="代码走读"><a href="#代码走读" class="headerlink" title="代码走读"></a>代码走读</h3><p>1.入口</p>
 <pre><code>console_scripts =
